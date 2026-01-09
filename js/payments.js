@@ -129,6 +129,7 @@ const renderTable = () => {
   filtered.forEach((client) => {
     const status = client.historial[monthKey];
     const row = document.createElement("tr");
+
     const yearValue = yearSelect.value;
     const monthGrid = monthLabels
       .map((month) => {
@@ -140,6 +141,7 @@ const renderTable = () => {
         return `<span class="month-chip ${statusClass}" title="${month.label} ${yearValue} · ${statusLabel}">${month.short}</span>`;
       })
       .join("");
+
     row.innerHTML = `
       <td>${client.id}</td>
       <td>${client.nombre}</td>
@@ -242,6 +244,7 @@ statusFilter.addEventListener("change", renderTable);
 searchInput.addEventListener("input", renderTable);
 monthSelect.addEventListener("change", renderTable);
 yearSelect.addEventListener("change", renderTable);
+
 refreshButton.addEventListener("click", async () => {
   paymentsData = await loadPaymentsData();
   renderTable();
@@ -253,6 +256,7 @@ const init = async () => {
   populateMonthOptions();
   yearSelect.value = year;
   monthSelect.value = month;
+
   if (currentDate) {
     currentDate.textContent = new Date().toLocaleDateString("es-PE", {
       weekday: "long",
@@ -261,6 +265,7 @@ const init = async () => {
       day: "numeric",
     });
   }
+
   paymentsData = await loadPaymentsData();
   renderTable();
 };
