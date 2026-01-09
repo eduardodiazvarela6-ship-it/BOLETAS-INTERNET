@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ingreso | VISION-INTERNET</title>
+  <link rel="stylesheet" href="../styles/main.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <section class="panel">
+      <h1>Ingreso privado</h1>
+      <p>Acceso exclusivo para administración de pagos.</p>
+      <form id="loginForm" class="login-form">
+        <input type="text" id="loginUser" placeholder="Usuario" required />
+        <input type="password" id="loginPass" placeholder="Contraseña" required />
+        <button type="submit" class="btn btn-primary">Ingresar</button>
+      </form>
+      <p id="loginMessage"></p>
+    </section>
+  </main>
+
+  <script src="../config.js"></script>
+  <script src="auth.js"></script>
+</body>
+</html>
