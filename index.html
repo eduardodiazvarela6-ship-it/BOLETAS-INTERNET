@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VISION-INTERNET | Control de Pagos</title>
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <h1>VISION-INTERNET</h1>
+      <p>Control de Pagos · Boletas · Recordatorios</p>
+      <span id="currentDate" class="muted"></span>
+    </div>
+    <div class="header-actions">
+      <span id="sessionUser"></span>
+      <button id="logoutButton" class="btn btn-secondary">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <section class="panel stats">
+      <div class="stat-card">
+        <h3>Clientes</h3>
+        <p id="statClients">0</p>
+      </div>
+      <div class="stat-card">
+        <h3>Pagos pendientes</h3>
+        <p id="statPending">0</p>
+      </div>
+      <div class="stat-card">
+        <h3>Pagos al día</h3>
+        <p id="statPaid">0</p>
+      </div>
+      <div class="stat-card">
+        <h3>Deuda total</h3>
+        <p id="statDebt">S/ 0.00</p>
+      </div>
+    </section>
+
+    <section class="panel filters">
+      <div>
+        <label for="yearSelect">Año</label>
+        <select id="yearSelect"></select>
+      </div>
+      <div>
+        <label for="monthSelect">Mes</label>
+        <select id="monthSelect"></select>
+      </div>
+      <div>
+        <label for="statusFilter">Estado</label>
+        <select id="statusFilter">
+          <option value="all">Todos</option>
+          <option value="pagado">Pagado</option>
+          <option value="pendiente">Pendiente</option>
+        </select>
+      </div>
+      <div>
+        <label for="searchInput">Buscar</label>
+        <input type="search" id="searchInput" placeholder="Nombre o correo" />
+      </div>
+      <div class="filters-actions">
+        <button id="refreshButton" class="btn btn-secondary">Actualizar</button>
+      </div>
+    </section>
+
+    <section class="panel form">
+      <h2>➕ Agregar cliente</h2>
+      <form id="clientForm">
+        <input type="text" id="clientName" placeholder="Nombre" required />
+        <input type="email" id="clientEmail" placeholder="Correo" required />
+        <input type="number" id="clientAmount" placeholder="Monto mensual" min="0" step="0.01" required />
+        <button type="submit" class="btn btn-primary">Guardar</button>
+      </form>
+    </section>
+
+    <section class="panel table">
+      <h2>Clientes</h2>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Cliente</th>
+              <th>Correo</th>
+              <th>Monto</th>
+              <th>Meses</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="clientsTable"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="auth/session.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/payments.js"></script>
+  <script src="billing/pdf.js"></script>
+  <script src="billing/invoice.js"></script>
+  <script src="email/email.js"></script>
+</body>
+</html>

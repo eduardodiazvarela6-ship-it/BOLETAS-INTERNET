@@ -1,0 +1,25 @@
+name: SMS Reminder
+
+on:
+  schedule:
+    - cron: "0 15 1 * *"
+  workflow_dispatch:
+
+jobs:
+  send-reminder:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Send monthly SMS
+        env:
+          TEXTBELT_KEY: ${{ secrets.TEXTBELT_KEY }}
+          SMS_PHONE: ${{ secrets.SMS_PHONE }}
+          OWNER_NAME: ${{ secrets.OWNER_NAME }}
+        run: node sms/textbelt.js
