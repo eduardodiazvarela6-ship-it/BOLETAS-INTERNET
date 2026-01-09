@@ -1,0 +1,14 @@
+{
+  "clientes": [
+    {
+      "id": "CL001",
+      "nombre": "Cliente Demo",
+      "correo": "demo@vision-internet.pe",
+      "monto": 120.0,
+      "historial": {
+        "2026-01": "pagado",
+        "2026-02": "pendiente"
+      }
+    }
+  ]
+}
