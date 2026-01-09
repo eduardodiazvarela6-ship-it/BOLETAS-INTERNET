@@ -1,9 +1,11 @@
 const tableBody = document.getElementById("clientsTable");
 const monthSelect = document.getElementById("monthSelect");
+const yearSelect = document.getElementById("yearSelect");
 const statusFilter = document.getElementById("statusFilter");
 const searchInput = document.getElementById("searchInput");
 const refreshButton = document.getElementById("refreshButton");
 const clientForm = document.getElementById("clientForm");
+const currentDate = document.getElementById("currentDate");
 
 const statClients = document.getElementById("statClients");
 const statPending = document.getElementById("statPending");
@@ -12,10 +14,51 @@ const statDebt = document.getElementById("statDebt");
 
 let paymentsData = { clientes: [] };
 
+const monthLabels = [
+  { key: "01", label: "Enero", short: "Ene" },
+  { key: "02", label: "Febrero", short: "Feb" },
+  { key: "03", label: "Marzo", short: "Mar" },
+  { key: "04", label: "Abril", short: "Abr" },
+  { key: "05", label: "Mayo", short: "May" },
+  { key: "06", label: "Junio", short: "Jun" },
+  { key: "07", label: "Julio", short: "Jul" },
+  { key: "08", label: "Agosto", short: "Ago" },
+  { key: "09", label: "Septiembre", short: "Sep" },
+  { key: "10", label: "Octubre", short: "Oct" },
+  { key: "11", label: "Noviembre", short: "Nov" },
+  { key: "12", label: "Diciembre", short: "Dic" },
+];
+
 const todayMonth = () => {
   const now = new Date();
-  const month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
-  return month;
+  return {
+    year: String(now.getFullYear()),
+    month: String(now.getMonth() + 1).padStart(2, "0"),
+  };
+};
+
+const buildMonthKey = () => `${yearSelect.value}-${monthSelect.value}`;
+
+const populateMonthOptions = () => {
+  monthSelect.innerHTML = "";
+  monthLabels.forEach((month) => {
+    const option = document.createElement("option");
+    option.value = month.key;
+    option.textContent = month.label;
+    monthSelect.appendChild(option);
+  });
+};
+
+const populateYearOptions = () => {
+  yearSelect.innerHTML = "";
+  const currentYear = new Date().getFullYear();
+  const years = [currentYear - 1, currentYear, currentYear + 1];
+  years.forEach((year) => {
+    const option = document.createElement("option");
+    option.value = String(year);
+    option.textContent = String(year);
+    yearSelect.appendChild(option);
+  });
 };
 
 const calculateDebt = (client) => {
@@ -67,7 +110,7 @@ const updateStats = (monthKey) => {
 };
 
 const renderTable = () => {
-  const monthKey = monthSelect.value;
+  const monthKey = buildMonthKey();
   const statusValue = statusFilter.value;
   const searchValue = searchInput.value.toLowerCase();
 
@@ -86,11 +129,25 @@ const renderTable = () => {
   filtered.forEach((client) => {
     const status = client.historial[monthKey];
     const row = document.createElement("tr");
+
+    const yearValue = yearSelect.value;
+    const monthGrid = monthLabels
+      .map((month) => {
+        const gridMonthKey = `${yearValue}-${month.key}`;
+        ensureMonth(client, gridMonthKey);
+        const gridStatus = client.historial[gridMonthKey];
+        const statusClass = gridStatus === "pagado" ? "paid" : "pending";
+        const statusLabel = gridStatus === "pagado" ? "Pagado" : "Pendiente";
+        return `<span class="month-chip ${statusClass}" title="${month.label} ${yearValue} · ${statusLabel}">${month.short}</span>`;
+      })
+      .join("");
+
     row.innerHTML = `
       <td>${client.id}</td>
       <td>${client.nombre}</td>
       <td>${client.correo}</td>
       <td>S/ ${client.monto.toFixed(2)}</td>
+      <td><div class="month-grid">${monthGrid}</div></td>
       <td>
         <span class="badge ${status === "pagado" ? "success" : "danger"}">
           ${status === "pagado" ? "🟢 Pagado" : "🔴 Pendiente"}
@@ -128,7 +185,7 @@ const handleAction = async (event) => {
     return;
   }
 
-  const monthKey = monthSelect.value;
+  const monthKey = buildMonthKey();
   ensureMonth(client, monthKey);
 
   if (action === "paid") {
@@ -161,7 +218,7 @@ clientForm.addEventListener("submit", async (event) => {
   const nombre = document.getElementById("clientName").value.trim();
   const correo = document.getElementById("clientEmail").value.trim();
   const monto = parseFloat(document.getElementById("clientAmount").value);
-  const monthKey = monthSelect.value;
+  const monthKey = buildMonthKey();
 
   if (!nombre || !correo || Number.isNaN(monto)) {
     return;
@@ -185,13 +242,30 @@ clientForm.addEventListener("submit", async (event) => {
 tableBody.addEventListener("click", handleAction);
 statusFilter.addEventListener("change", renderTable);
 searchInput.addEventListener("input", renderTable);
+monthSelect.addEventListener("change", renderTable);
+yearSelect.addEventListener("change", renderTable);
+
 refreshButton.addEventListener("click", async () => {
   paymentsData = await loadPaymentsData();
   renderTable();
 });
 
 const init = async () => {
-  monthSelect.value = todayMonth();
+  const { year, month } = todayMonth();
+  populateYearOptions();
+  populateMonthOptions();
+  yearSelect.value = year;
+  monthSelect.value = month;
+
+  if (currentDate) {
+    currentDate.textContent = new Date().toLocaleDateString("es-PE", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  }
+
   paymentsData = await loadPaymentsData();
   renderTable();
 };
