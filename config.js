@@ -1,24 +1,29 @@
 const CONFIG = {
   appName: "VISION-INTERNET: Control de Pagos",
   ownerName: "Eomar Frank",
+
   auth: {
     username: "admin",
-    passwordHash: "01b3701e81fff382adad05a35837ca16280c334c279d5f10cad8efcecc97b103",
+    // password: admin123 (ejemplo, cambia luego)
+    passwordHash: "31dd3bd6f18f2aa5d3373f1744deb208d888de71f0127fee99e76a2e1b54130a"
   },
+
   storage: {
-    owner: "YOUR_GITHUB_USER",
+    owner: "eduardodiazvarela6-ship-it", // tu usuario de GitHub
     repo: "BOLETAS-INTERNET",
     path: "data/payments.json",
-    token: "",
+    token: "" // GitHub Token si luego lo necesitas
   },
+
   email: {
     provider: "emailjs",
     serviceId: "",
     templateId: "",
-    publicKey: "",
+    publicKey: ""
   },
+
   sms: {
-    textbeltKey: "textbelt",
-    phone: "",
-  },
+    textbeltKey: "textbelt", // gratis (1 SMS/día)
+    phone: ""
+  }
 };
