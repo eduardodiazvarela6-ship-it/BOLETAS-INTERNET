@@ -52,6 +52,7 @@ loginForm.addEventListener("submit", async (event) => {
   }
 
   const incomingHash = await hashPassword(password);
+
   const storedCredentials = getStoredCredentials();
 
   if (!storedCredentials) {
